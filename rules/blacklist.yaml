@@ -1,0 +1,12 @@
+# Blacklist: known incompatible repositories (algorithm does not detect them on its own)
+# When a repo is listed here, the integration will mark it as INCOMPATIBLE regardless
+# of the automatic analysis.
+#
+# Format:
+#   full_name:  "owner/repo" (required)
+#   reason:     Reason for inclusion (required)
+#   ha_version: HA version where applicable, "*" = all (optional, defaults to "*")
+#   added:      ISO date (YYYY-MM-DD)
+#   issue:      URL of the issue in this repo that originated the entry
+
+repositories: []

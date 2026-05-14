@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: HACS Compatibility Auditor
+    url: https://github.com/RmG152/hacs-compatibility-auditor
+    about: Main integration repository
+  - name: Documentación
+    url: https://github.com/RmG152/hacs-compatibility-auditor/blob/main/README.md
+    about: Integration documentation

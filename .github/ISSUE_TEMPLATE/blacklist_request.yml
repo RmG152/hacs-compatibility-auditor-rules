@@ -1,0 +1,50 @@
+name: Suggest Blacklist (undetected incompatible)
+description: Report a repository that is incompatible but the algorithm does not detect it automatically
+labels: ["blacklist-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Blacklist Suggestion
+
+        Use this form to report a repository that IS incompatible with your
+        Home Assistant version, but the algorithm is not detecting it (because
+        it has no issues with relevant labels, keywords, etc.).
+
+  - type: input
+    id: repository
+    attributes:
+      label: Repository
+      description: "Full repository name (format: owner/repo)"
+      placeholder: "some-dev/broken-integration"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason
+      description: Explain why this repository is incompatible
+      placeholder: |
+        - Uses an internal HA API that was removed in version 2026.4
+        - The latest version causes startup errors in HA 2026.5
+        - The maintainer has abandoned the project
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: URLs proving the incompatibility
+      placeholder: |
+        - https://github.com/owner/repo/issues/789 (error reported)
+        - https://github.com/owner/repo/releases/tag/v2.0.0 (broken release)
+        - HA logs showing the error
+
+  - type: input
+    id: ha_version
+    attributes:
+      label: Home Assistant Version
+      description: "HA version where you confirmed the incompatibility (empty = all)"
+      placeholder: ">=2026.4.0"

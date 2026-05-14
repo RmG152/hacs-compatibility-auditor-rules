@@ -1,0 +1,46 @@
+name: Release Rules
+on:
+  push:
+    branches: [main]
+    paths:
+      - "rules/*.yaml"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Validate and generate index.json
+        run: python scripts/validate_rules.py
+
+      - name: Commit index.json
+        run: |
+          git config user.name "hacs-compatibility-auditor[bot]"
+          git config user.email "bot@hacs-compatibility-auditor"
+          git add index.json
+          git diff --staged --quiet || git commit -m "Update index.json"
+
+      - name: Push index.json
+        run: git push origin main
+
+      - name: Create Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG="rules-v$(TZ=UTC date +'%Y%m%d%H%M')"
+          gh release create "$TAG" \
+            --title "Rules $TAG" \
+            --notes "Actualización automática de reglas" \
+            --target main \
+            rules/*.yaml index.json

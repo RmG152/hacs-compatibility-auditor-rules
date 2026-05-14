@@ -1,0 +1,12 @@
+# Whitelist: known compatible repositories (override algorithm false positives)
+# When a repo is listed here, the integration will mark it as COMPATIBLE regardless
+# of what the issue, label, and keyword analysis detects.
+#
+# Format:
+#   full_name:  "owner/repo" (required)
+#   reason:     Reason for inclusion (required)
+#   ha_version: HA version where applicable, "*" = all (optional, defaults to "*")
+#   added:      ISO date (YYYY-MM-DD)
+#   issue:      URL of the issue in this repo that originated the entry
+
+repositories: []

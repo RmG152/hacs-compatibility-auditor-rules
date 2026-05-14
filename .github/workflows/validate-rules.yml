@@ -1,0 +1,35 @@
+name: Validate Rules
+on:
+  pull_request:
+    paths:
+      - "rules/*.yaml"
+      - "scripts/validate_rules.py"
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Validate rules
+        id: validate
+        run: python scripts/validate_rules.py --check-only
+
+      - name: Comment validation result
+        if: failure()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr comment "${{ github.event.pull_request.number }}" \
+            --body "❌ **Error de validación:** Los archivos de reglas no pasaron la validación. Revisa el output del workflow para más detalles."

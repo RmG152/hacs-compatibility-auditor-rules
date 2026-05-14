@@ -1,0 +1,50 @@
+name: Suggest Whitelist (false positive)
+description: Report a repository that the algorithm marks as warning/incompatible but is actually compatible
+labels: ["whitelist-request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Whitelist Suggestion
+
+        Use this form to report a repository that the HACS Compatibility Auditor
+        algorithm incorrectly marks as "warning" or "incompatible", but you have
+        verified it works correctly.
+
+  - type: input
+    id: repository
+    attributes:
+      label: Repository
+      description: "Full repository name (format: owner/repo)"
+      placeholder: "custom-cards/button-card"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason
+      description: Explain why this repository is actually compatible
+      placeholder: |
+        - The detected issues are feature requests, not compatibility bugs
+        - The "breaking" label is used for internal changes, not HA incompatibilities
+        - The maintainer confirmed it is compatible with the current HA version
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: URLs supporting your request (issues, releases, comments, PRs)
+      placeholder: |
+        - https://github.com/owner/repo/issues/123
+        - https://github.com/owner/repo/releases/tag/v1.2.3
+        - https://github.com/owner/repo/pull/456
+
+  - type: input
+    id: ha_version
+    attributes:
+      label: Home Assistant Version
+      description: "HA version where you verified compatibility (empty = all)"
+      placeholder: ">=2026.1.0"

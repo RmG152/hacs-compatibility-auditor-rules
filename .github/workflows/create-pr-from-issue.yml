@@ -1,0 +1,67 @@
+name: Create PR from Issue
+on:
+  issues:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: read
+
+jobs:
+  create-pr:
+    if: |
+      contains(fromJson('["whitelist-request", "blacklist-request", "false-positive"]'), github.event.label.name)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install pyyaml
+
+      - name: Create PR from issue
+        id: create
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          LABEL_NAME: ${{ github.event.label.name }}
+        run: python scripts/create_pr_from_issue.py
+
+      - name: Commit and push
+        env:
+          BRANCH: ${{ steps.create.outputs.branch }}
+          FILE: ${{ steps.create.outputs.file }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          git config user.name "hacs-compatibility-auditor[bot]"
+          git config user.email "bot@hacs-compatibility-auditor"
+          git checkout -b "$BRANCH"
+          git add "$FILE"
+          git commit -m "Add rule from issue #${ISSUE_NUMBER}"
+          git push origin "$BRANCH"
+
+      - name: Create Pull Request
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: ${{ steps.create.outputs.branch }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "Rules: add entry from issue #${ISSUE_NUMBER}" \
+            --body "Closes #${ISSUE_NUMBER}" \
+            --label "auto-pr"
+
+      - name: Add comment to issue
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$ISSUE_NUMBER" \
+            --body "✅ Pull Request creado automáticamente. Un mantenedor revisará los cambios."

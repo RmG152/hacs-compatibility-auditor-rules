@@ -1,0 +1,51 @@
+name: Report False Positive (specific issue)
+description: Report a specific issue that the algorithm is incorrectly using to mark a repo as incompatible
+labels: ["false-positive"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## False Positive Report
+
+        Use this form to report a **specific issue** that the algorithm is using
+        to determine incompatibility, but which should not actually count (e.g., label
+        not cleaned up, resolved issue, misinterpreted, etc.).
+
+  - type: input
+    id: repository
+    attributes:
+      label: Repository
+      description: "Full repository name (format: owner/repo)"
+      placeholder: "custom-cards/button-card"
+    validations:
+      required: true
+
+  - type: input
+    id: issue_number
+    attributes:
+      label: Issue Number
+      description: "GitHub issue number that is a false positive"
+      placeholder: "123"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason
+      description: Explain why this issue should not count as evidence of incompatibility
+      placeholder: |
+        - The issue was resolved but the "breaking" label was not cleaned up
+        - It's a feature request, not a compatibility bug
+        - The "incompatible" label was used incorrectly
+    validations:
+      required: true
+
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: URLs supporting your report
+      placeholder: |
+        - https://github.com/owner/repo/issues/123 (maintainer comment)
+        - https://github.com/owner/repo/pull/124 (PR that resolves it)

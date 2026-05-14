@@ -1,0 +1,18 @@
+# Label Overrides: adjust label weights per repository
+# Allows raising or lowering the score the algorithm assigns to certain labels
+# in specific repos known to generate false positives.
+#
+# Format:
+#   full_name: "owner/repo" (required)
+#   labels:    label → weight mapping (0 to ignore, number to override)
+#
+# Default weights in the integration:
+#   "breaking-change" → +20
+#   "breaking"        → +15
+#   "incompatible"    → +15
+#   "deprecation"     → +10
+#   "upgrade"         → +8
+#   "compatibility"   → +8
+#   "bug"             → +5
+
+overrides: []

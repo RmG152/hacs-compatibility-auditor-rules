@@ -1,0 +1,17 @@
+# Keyword Overrides: adjust keyword weights per repository
+# Allows raising or lowering the score the algorithm assigns to certain keywords
+# in specific repos known to generate false positives.
+#
+# Format:
+#   full_name: "owner/repo" (required)
+#   keywords:  keyword → weight mapping (0 to ignore)
+#
+# Default weights in the integration:
+#   "breaking change"    → +10
+#   "incompatible"       → +8
+#   "not compatible"     → +8
+#   "deprecated"         → +6
+#   "stopped working"    → +5
+#   "no longer works"    → +5
+
+overrides: []
