@@ -34,6 +34,7 @@ jobs:
 
       - name: Commit and push
         env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           BRANCH: ${{ steps.create.outputs.branch }}
           FILE: ${{ steps.create.outputs.file }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
@@ -47,7 +48,7 @@ jobs:
 
       - name: Create Pull Request
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN || secrets.GITHUB_TOKEN }}
           BRANCH: ${{ steps.create.outputs.branch }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
@@ -64,4 +65,4 @@ jobs:
           ISSUE_NUMBER: ${{ github.event.issue.number }}
         run: |
           gh issue comment "$ISSUE_NUMBER" \
-            --body "✅ Pull Request creado automáticamente. Un mantenedor revisará los cambios."
+            --body "✅ Pull Request created automatically. A maintainer will review the changes."
