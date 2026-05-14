@@ -1,12 +1,7 @@
-# False Positives: specific issues that should be ignored in compatibility scoring
-# Useful when an issue has labels like "breaking" or "incompatible" but
-# is not actually relevant (e.g., label was not cleaned up after the issue was resolved).
-#
-# Format:
-#   full_name:    "owner/repo" (required)
-#   issue_number: GitHub issue number (required)
-#   reason:       Reason why it is a false positive (required)
-#   added:        ISO date (YYYY-MM-DD)
-#   issue:        URL of the issue in this repo that originated the entry
-
-issues: []
+issues:
+- full_name: hacs/integration
+  issue_number: 4423
+  reason: This will not be fixed in the current version of HACS and does not affect
+    its operation
+  added: ''
+  issue: https://github.com/RmG152/hacs-compatibility-auditor-rules/issues/1
