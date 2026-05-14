@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Valida todos los archivos de reglas y genera index.json con el manifiesto.
-Se ejecuta en los workflows validate-rules.yml y release-rules.yml.
+Validates all rules files and generates index.json with the manifest.
+Runs in validate-rules.yml and release-rules.yml workflows.
 
-Uso:
-  python scripts/validate_rules.py          # Valida y genera index.json
-  python scripts/validate_rules.py --check-only  # Solo valida, no genera index
+Usage:
+  python scripts/validate_rules.py          # Validate and generate index.json
+  python scripts/validate_rules.py --check-only  # Validate only, do not generate index
 """
 
 import argparse
@@ -58,19 +58,19 @@ SCHEMAS: dict[str, dict] = {
 
 
 def validate_file(filepath: Path, schema: dict) -> tuple[list[str], list[dict], int]:
-    """Valida un archivo de reglas. Devuelve (errores, entries, count)."""
+    """Validates a rules file. Returns (errors, entries, count)."""
     errors: list[str] = []
     entries: list[dict] = []
 
     if not filepath.exists():
-        errors.append(f"Archivo no encontrado: {filepath}")
+        errors.append(f"File not found: {filepath}")
         return errors, entries, 0
 
     with open(filepath, encoding="utf-8") as f:
         try:
             data = yaml.safe_load(f)
         except yaml.YAMLError as e:
-            errors.append(f"Error YAML en {filepath}: {e}")
+            errors.append(f"YAML error in {filepath}: {e}")
             return errors, entries, 0
 
     if data is None:
@@ -80,33 +80,33 @@ def validate_file(filepath: Path, schema: dict) -> tuple[list[str], list[dict], 
     raw_entries = data.get(root_key, [])
 
     if not isinstance(raw_entries, list):
-        errors.append(f"'{root_key}' debe ser una lista en {filepath}")
+        errors.append(f"'{root_key}' must be a list in {filepath}")
         return errors, entries, 0
 
     seen_keys: set[str] = set()
 
     for i, entry in enumerate(raw_entries):
         if not isinstance(entry, dict):
-            errors.append(f"Entrada {i} en {filepath} no es un diccionario")
+            errors.append(f"Entry {i} in {filepath} is not a dictionary")
             continue
 
-        # Verificar claves requeridas
+        # Check required keys
         for key in schema["required_keys"]:
             if key not in entry or entry[key] == "":
-                errors.append(f"Entrada {i} en {filepath}: falta campo obligatorio '{key}'")
+                errors.append(f"Entry {i} in {filepath}: missing required field '{key}'")
                 continue
 
-        # Verificar que no haya claves extrañas
+        # Check for unknown keys
         for key in entry:
             if key not in schema["entry_keys"]:
-                errors.append(f"Entrada {i} en {filepath}: clave desconocida '{key}'")
+                errors.append(f"Entry {i} in {filepath}: unknown key '{key}'")
 
-        # Detectar duplicados
+        # Detect duplicates
         dedup_key = str(entry.get("full_name", ""))
         if "issue_number" in entry:
             dedup_key += f"#{entry['issue_number']}"
         if dedup_key in seen_keys:
-            errors.append(f"Entrada duplicada: {dedup_key} en {filepath}")
+            errors.append(f"Duplicate entry: {dedup_key} in {filepath}")
         seen_keys.add(dedup_key)
 
         entries.append(entry)
@@ -115,7 +115,7 @@ def validate_file(filepath: Path, schema: dict) -> tuple[list[str], list[dict], 
 
 
 def generate_index(stats: dict) -> dict:
-    """Genera el manifiesto index.json."""
+    """Generates the index.json manifest."""
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     index = {
@@ -138,11 +138,11 @@ def generate_index(stats: dict) -> dict:
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Valida reglas y genera index.json")
+    parser = argparse.ArgumentParser(description="Validate rules and generate index.json")
     parser.add_argument(
         "--check-only",
         action="store_true",
-        help="Solo validar, sin generar index.json",
+        help="Only validate, do not generate index.json",
     )
     args = parser.parse_args()
 
@@ -167,7 +167,7 @@ def main():
         }
 
     if all_errors:
-        print(f"[ERROR] Validacion fallida: {len(all_errors)} error(es)", file=sys.stderr)
+        print(f"[ERROR] Validation failed: {len(all_errors)} error(s)", file=sys.stderr)
         for err in all_errors:
             print(f"  - {err}", file=sys.stderr)
         sys.exit(1)
@@ -177,13 +177,13 @@ def main():
         with open(INDEX_FILE, "w", encoding="utf-8") as f:
             json.dump(index, f, indent=2, ensure_ascii=False)
         total = sum(s["count"] for s in stats.values())
-        print(f"[OK] index.json generado con {total} reglas en total")
+        print(f"[OK] index.json generated with {total} rules total")
     else:
-        print("[OK] Validacion exitosa")
+        print("[OK] Validation successful")
 
-    # Resumen por archivo
+    # Summary per file
     for key, info in stats.items():
-        print(f"  {key}: {info['count']} entradas")
+        print(f"  {key}: {info['count']} entries")
 
 
 if __name__ == "__main__":
