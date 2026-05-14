@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "updated": "2026-05-14T06:58:51Z",
+  "updated": "2026-05-14T07:58:50Z",
   "source": "https://github.com/RmG152/hacs-compatibility-auditor-rules",
   "rules": {
     "whitelist": {
@@ -12,7 +12,7 @@
       "file": "rules/blacklist.yaml"
     },
     "false_positives": {
-      "count": 0,
+      "count": 1,
       "file": "rules/false_positives.yaml"
     },
     "label_overrides": {
@@ -24,5 +24,5 @@
       "file": "rules/keyword_overrides.yaml"
     }
   },
-  "checksum": "96ca6940d391d60fa2bef334523a0759a2d3d15d3cebaea63650dff45ceaed7e"
+  "checksum": "830b0212ffc4e23e749864dd31d805e9b994247d3b4c2ae88d7be04c2e1a7ca0"
 }
