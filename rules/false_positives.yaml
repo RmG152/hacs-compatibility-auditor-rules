@@ -5,3 +5,8 @@ issues:
     its operation
   added: ''
   issue: https://github.com/RmG152/hacs-compatibility-auditor-rules/issues/1
+- full_name: kalkih/mini-graph-card
+  issue_number: 527
+  reason: Is a maintainer recruitment request with no connection to HA change
+  added: ''
+  issue: https://github.com/RmG152/hacs-compatibility-auditor-rules/issues/4
