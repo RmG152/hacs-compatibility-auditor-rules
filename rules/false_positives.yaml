@@ -5,3 +5,15 @@ issues:
     its operation
   added: ''
   issue: https://github.com/RmG152/hacs-compatibility-auditor-rules/issues/1
+- full_name: nielsfaber/alarmo
+  issue_number: 652
+  reason: "The flagged issue (#652) is a feature request titled 'Consider adding Repeat\n\
+    \  with Wildcards' with labels indicating it's a feature request that maintainers\n\
+    \  will address 'at some point'. This is not a compatibility issue with Home\n\
+    \  Assistant 2026.5.2. The package's manifest specifies a minimum HA requirement\n\
+    \  of 2026.5.0, and the current HA version is 2026.5.2, indicating compatibility.\n\
+    \  The algorithm appears to have incorrectly flagged this feature request as a\n\
+    \  warning issue when it has no relation to breaking changes, deprecated\n  features,\
+    \ or API changes that would affect compatibility."
+  added: ''
+  issue: https://github.com/RmG152/hacs-compatibility-auditor-rules/issues/6
